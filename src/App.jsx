@@ -418,7 +418,6 @@ function App () {
     const semiMajorAxis = semiMajorAxisVal.current
     const semiMinorAxis = semiMinorAxisVal.current
     let i = 0
-    console.log('startOffsetObj.current', startOffsetObj.current)
     ellipseIsShow.current = true;
     imgDarken.current = false;
     setTimeout(() => {
@@ -566,9 +565,7 @@ function App () {
         const width = boundingBox.max.x - boundingBox.min.x;
         textMesh.position.set(x, y, 0);
         // 计算旋转角度以使其与圆周平行
-        console.log('angle=', angle)
         const rotationAngle = angle + Math.PI / 2;
-        console.log('rotationAngle=', rotationAngle)
         textMesh.rotation.z = rotationAngle;
         scene.add(textMesh);
       }
