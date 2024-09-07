@@ -38,7 +38,7 @@ function App () {
   const startOffsetObj = useRef({})
   // const [ellipseIsShow, setEllipseIsShow] = useState(true)
   const ellipseIsShow = useRef(true)
-  const textIsShow = useRef(false)
+  const imgDarken = useRef(false)
   const [contentText, setContentText] = useState([
     {
       title: '2040s: The Age of AI Symbiosis and Global Integration',
@@ -113,7 +113,7 @@ function App () {
     const scene = new THREE.Scene();
     // scene.background = new THREE.Color(0x87CEEB);
     const camera = new THREE.PerspectiveCamera(75, clientWidth / clientHeight, 0.1, 1000);
-    camera.position.z = 5;
+    camera.position.z = 6;
     camera.position.x = 0;
     camera.position.y = -2;
     camera.lookAt(0, 0, 0);
@@ -125,7 +125,7 @@ function App () {
     boxTopRef.current.appendChild(renderer.domElement);
 
     // 创建圆环几何体
-    const geometry = new THREE.RingGeometry(22, 23, 64);
+    const geometry = new THREE.RingGeometry(19, 20, 64);
 
     // 创建材质，可根据需求调整外观
     const material = new THREE.MeshBasicMaterial({
@@ -136,7 +136,7 @@ function App () {
 
     // 创建圆环网格
     const ring = new THREE.Mesh(geometry, material);
-    ring.position.set(0, 22, 0)
+    ring.position.set(0, 19.5, 0)
     scene.add(ring);
     // 添加刻度 线条
     const lineData = []
@@ -152,11 +152,11 @@ function App () {
       // const lineMaterial = new THREE.LineBasicMaterial({ color: i % 2 === 0 ? 0xffffff : 0xff0000, linewidth: 5 });
       // const line = new THREE.Line(lineGeometry, lineMaterial);
       const lineGeometry = new LineGeometry()
-      lineGeometry.setPositions([Math.sin(i * (2 * Math.PI / 240)) * 22, Math.cos(i * (2 * Math.PI / 240)) * 22, 0, Math.sin(i * (2 * Math.PI / 240)) * 23, Math.cos(i * (2 * Math.PI / 240)) * 23, 0])
+      lineGeometry.setPositions([Math.sin(i * (2 * Math.PI / 240)) * 19, Math.cos(i * (2 * Math.PI / 240)) * 19, 0, Math.sin(i * (2 * Math.PI / 240)) * 20, Math.cos(i * (2 * Math.PI / 240)) * 20, 0])
       // const lineMaterial = new LineMaterial({ color: i % 2 === 0 ? 0xffffff : 0xff0000, linewidth: 4 })
       const lineMaterial = new LineMaterial({ color: 0x000000, linewidth: i % 2 ? 1 : 2 })
       const line = new Line2(lineGeometry, lineMaterial)
-      line.position.set(0, 22, 0)
+      line.position.set(0, 19.5, 0)
       scene.add(line);
       lineData.push(line);
       // lineGroup.add(line);
@@ -289,13 +289,13 @@ function App () {
     const windowWidth = appContainerRef.current.clientWidth
     const windowHeight = appContainerRef.current.clientHeight
     // 椭圆参数
-    // const semiMajorAxis = (windowWidth * 0.67 / 2) / 1.3
-    // // const semiMinorAxis = (windowHeight * 0.54) / 1.3
-    // const semiMinorAxis = semiMajorAxis * 750.39 / 1030
-    const semiMajorAxis = 516  // 椭圆长轴
-    const semiMinorAxis = 375   // 椭圆短轴
+    const semiMajorAxis = (windowWidth * 0.67 / 2) / 1.3
+    // const semiMinorAxis = (windowHeight * 0.54) / 1.3
+    const semiMinorAxis = semiMajorAxis * 750.39 / 1030
+    // const semiMajorAxis = 516 / 1.3 // 椭圆长轴
+    // const semiMinorAxis = 375 / 1.3  // 椭圆短轴
     const centerX = svgCanvas.width.animVal.value / 2;  // 椭圆中心X坐标
-    const centerY = svgCanvas.height.animVal.value;  // 椭圆中心Y坐标
+    const centerY = svgCanvas.height.animVal.value + semiMinorAxis - ((695 - 355) / 695 * windowHeight) + 20;  // 椭圆中心Y坐标 semiMinorAxis-((695-355)/695*windowHeight)
     semiMajorAxisVal.current = semiMajorAxis
     semiMinorAxisVal.current = semiMinorAxis
     // 定义椭圆路径的d属性
@@ -319,7 +319,7 @@ function App () {
       textPathElement.textContent = text;
       textPathElement.setAttribute('fill', '#000000');
       textPathElement.setAttribute('font-family', 'customFont_Roman');
-      textPathElement.setAttribute('font-size', '19px');
+      textPathElement.setAttribute('font-size', '20px');
       textPathElement.setAttribute('text-anchor', 'middle');
       textPathElement.addEventListener('click', function (e) {
         rotateHideEllipse()
@@ -369,9 +369,10 @@ function App () {
     const semiMajorAxis = semiMajorAxisVal.current
     const semiMinorAxis = semiMinorAxisVal.current
     const centerX = svgCanvas.width.animVal.value / 2;  // 椭圆中心X坐标
-    const centerY = svgCanvas.height.animVal.value;  // 椭圆中心Y坐标
+    const centerY = svgCanvas.height.animVal.value + 10;  // 椭圆中心Y坐标
     let i = 0
     const interval = 1000 / 120;
+    imgDarken.current = true;
     const setIntervalFn1 = setInterval(() => {
       i++;
       // let newSemiMajorAxis = semiMajorAxis - i * 4
@@ -407,7 +408,7 @@ function App () {
     const svgCanvas = bottomSvgRef.current;
     const ellipsePath = bottomSvgEllipsePathRef.current;
     const centerX = svgCanvas.width.animVal.value / 2;  // 椭圆中心X坐标
-    const centerY = svgCanvas.height.animVal.value;  // 椭圆中心Y坐标
+    const centerY = svgCanvas.height.animVal.value + 10;  // 椭圆中心Y坐标
     // for (let i = 1; i <= 1000; i++) {
     //   let newSemiMajorAxis = semiMajorAxis - i * 0.2
     //   let newSemiMinorAxis = semiMinorAxis - i * 0.1
@@ -420,6 +421,7 @@ function App () {
     console.log('startOffsetObj.current', startOffsetObj.current)
     ellipseIsShow.current = true;
     setTimeout(() => {
+      imgDarken.current = false;
       const interval = 1000 / 120;
       const setIntervalFn = setInterval(() => {
         i++;
@@ -776,17 +778,18 @@ function App () {
     <>
       <div className='appContainer' ref={appContainerRef}>
         <div className='mask'></div>
+        {/* <div className='bgImg'></div> */}
         {/* <div className='line'></div> */}
-        <div className='leftTopImg'>
+        <div className={imgDarken.current ? 'leftTopImg isDarken' : 'leftTopImg'}>
           <img src={leftTopImg} alt="" />
         </div>
-        <div className='rightTopImg'>
+        <div className={imgDarken.current ? 'rightTopImg isDarken' : 'rightTopImg'}>
           <img src={rightTopImg} alt="" />
         </div>
-        <div className='rightBottomImg'>
+        <div className={imgDarken.current ? 'rightBottomImg isDarken' : 'rightBottomImg'}>
           <img src={rightBottomImg} alt="" />
         </div>
-        <div className='leftBottomImg'>
+        <div className={imgDarken.current ? 'leftBottomImg isDarken' : 'leftBottomImg'}>
           <img src={leftBottomImg} alt="" />
         </div>
         <div className='timeStamp'>
