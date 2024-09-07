@@ -13,10 +13,14 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
  
-      - name: Install and Build 🔧📦
-        run: |
-          npm install
-          npm run build
+      - name: Install Dependencies 🔧📦
+        run: npm install
+
+      - name: Build 🔧📦
+        env:
+          PUBLIC_URL: /reactAnimate/
+        run: npm run build 
+
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:

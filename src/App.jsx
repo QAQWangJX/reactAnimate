@@ -420,8 +420,8 @@ function App () {
     let i = 0
     console.log('startOffsetObj.current', startOffsetObj.current)
     ellipseIsShow.current = true;
+    imgDarken.current = false;
     setTimeout(() => {
-      imgDarken.current = false;
       const interval = 1000 / 120;
       const setIntervalFn = setInterval(() => {
         i++;
