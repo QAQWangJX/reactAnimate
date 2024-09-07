@@ -1,25 +1,24 @@
-name: Deploy React App
-
+name: Deploy React App to GitHub Pages
+ 
 on:
   push:
     branches:
-      - master # 触发工作流的分支，可以根据实际情况修改
-
+      - master  # 更改为你的默认分支
+ 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+ 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build React app
-        run: npm run build
-
-      - name: Deploy to GitHub Pages
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+ 
+      - name: Install and Build 🔧📦
+        run: |
+          npm install
+          npm run build
+      - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir:./dist # 构建后的输出目录
+          publish_dir: ./dist  # 更改为你的构建输出目录
