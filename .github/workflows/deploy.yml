@@ -17,8 +17,6 @@ jobs:
         run: npm install
 
       - name: Build 🔧📦
-        env:
-          PUBLIC_URL: /reactAnimate/
         run: npm run build 
 
       - name: Deploy 🚀
