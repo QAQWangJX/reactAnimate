@@ -119,8 +119,8 @@ function App () {
     camera.position.x = 0;
     camera.position.y = -2;
     camera.lookAt(0, 0, 0);
+    // const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    // renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setSize(clientWidth, clientHeight);
     // 设置清除颜色为完全透明的黑色（0x00000000，前两位 0x00 表示透明度为 0）
     // renderer.setClearColor(0x00000000);
@@ -155,8 +155,7 @@ function App () {
       // const line = new THREE.Line(lineGeometry, lineMaterial);
       const lineGeometry = new LineGeometry()
       lineGeometry.setPositions([Math.sin(i * (2 * Math.PI / 240)) * 19, Math.cos(i * (2 * Math.PI / 240)) * 19, 0, Math.sin(i * (2 * Math.PI / 240)) * 20, Math.cos(i * (2 * Math.PI / 240)) * 20, 0])
-      // const lineMaterial = new LineMaterial({ color: i % 2 === 0 ? 0xffffff : 0xff0000, linewidth: 4 })
-      const lineMaterial = new LineMaterial({ color: 0x000000, linewidth: i % 2 ? 1 : 2 })
+      const lineMaterial = new LineMaterial({ color: 0x000000, linewidth: i % 2 === 0 ? 2 : 1 })
       const line = new Line2(lineGeometry, lineMaterial)
       line.position.set(0, 19.5, 0)
       scene.add(line);
@@ -418,9 +417,9 @@ function App () {
     const centerY = svgCanvas.height.animVal.value + semiMinorAxis - ((695 - 355) / 695 * windowHeight) + 20;  // 椭圆中心Y坐标 semiMinorAxis-((695-355)/695*windowHeight)
     let i = 0
     ellipseIsShow.current = true;
+    imgDarken.current = false;
     setTimeout(() => {
       const interval = 1000 / 120;
-      imgDarken.current = false;
       const setIntervalFn = setInterval(() => {
         i++;
         let newSemiMajorAxis = semiMajorAxis
@@ -453,7 +452,7 @@ function App () {
           clearInterval(setIntervalFn)
         }
       }, interval);
-    }, 800)
+    }, 1000)
   }
   // canvas 绘制椭圆
   const initYearEllipseByCanvas = () => {
