@@ -13,8 +13,9 @@ import rightTopImg from './assets/Asset-35.png'
 import rightBottomImg from './assets/Asset-34.png'
 import leftBottomImg from './assets/Asset-33.png'
 import RectangleImg from './assets/Rectangle-3.png'
+import yearData from './assets/yearData';
 function App () {
-  // const timeStamp = useRef('111')
+  const timeStampRef = useRef()
   const [timeStamp, setTimeStamp] = useState({
     day: '',
     month: '',
@@ -27,6 +28,7 @@ function App () {
   const appContainerRef = useRef()
   const boxTopRef = useRef()
   const boxBottomRef = useRef()
+  const boxBottomTextRef = useRef()
   const bottomCanvasRef = useRef()
   const bottomSvgRef = useRef()
   const bottomSvgEllipsePathRef = useRef()
@@ -290,7 +292,6 @@ function App () {
     const windowHeight = appContainerRef.current.clientHeight
     // 椭圆参数
     const semiMajorAxis = (windowWidth * 0.67 / 2) / 1.3
-    // const semiMinorAxis = (windowHeight * 0.54) / 1.3
     const semiMinorAxis = semiMajorAxis * 750.39 / 1030
     // const semiMajorAxis = 516 / 1.3 // 椭圆长轴
     // const semiMinorAxis = 375 / 1.3  // 椭圆短轴
@@ -304,8 +305,6 @@ function App () {
     const textArr = ['1950s', '1960s', '1970s', '1980s', '1990s', '2000s', '2010s', '2020s', '2030s', '2040s', '2050s']
     const totalSegments = textArr.length;
     const segmentPercentage = 100 / totalSegments; // 每段占路径的百分比
-    const angleStep = (2 * Math.PI) / textArr.length;
-    // const referenceValue = 
     textArr.forEach((text, index) => {
       // 创建文字元素
       // const textElement = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -322,6 +321,8 @@ function App () {
       textPathElement.setAttribute('font-size', '20px');
       textPathElement.setAttribute('text-anchor', 'middle');
       textPathElement.addEventListener('click', function (e) {
+        setContentText(yearData[e.target.innerHTML])
+        boxBottomTextRef.current.scrollTop = 0
         rotateHideEllipse()
       });
       // textElement.style.transform = 'scale(1.3, 1)'
@@ -364,12 +365,14 @@ function App () {
   }
   // 旋转隐藏椭圆
   const rotateHideEllipse = () => {
+    const windowWidth = appContainerRef.current.clientWidth
+    const windowHeight = appContainerRef.current.clientHeight
     const svgCanvas = bottomSvgRef.current;
     const ellipsePath = bottomSvgEllipsePathRef.current;
     const semiMajorAxis = semiMajorAxisVal.current
     const semiMinorAxis = semiMinorAxisVal.current
     const centerX = svgCanvas.width.animVal.value / 2;  // 椭圆中心X坐标
-    const centerY = svgCanvas.height.animVal.value + 10;  // 椭圆中心Y坐标
+    const centerY = svgCanvas.height.animVal.value + semiMinorAxis - ((695 - 355) / 695 * windowHeight) + 20;  // 椭圆中心Y坐标 semiMinorAxis-((695-355)/695*windowHeight)
     let i = 0
     const interval = 1000 / 120;
     imgDarken.current = true;
@@ -405,23 +408,19 @@ function App () {
   }
   // 旋转展示椭圆
   const rotateShowEllipse = () => {
+    const windowWidth = appContainerRef.current.clientWidth
+    const windowHeight = appContainerRef.current.clientHeight
     const svgCanvas = bottomSvgRef.current;
     const ellipsePath = bottomSvgEllipsePathRef.current;
-    const centerX = svgCanvas.width.animVal.value / 2;  // 椭圆中心X坐标
-    const centerY = svgCanvas.height.animVal.value + 10;  // 椭圆中心Y坐标
-    // for (let i = 1; i <= 1000; i++) {
-    //   let newSemiMajorAxis = semiMajorAxis - i * 0.2
-    //   let newSemiMinorAxis = semiMinorAxis - i * 0.1
-    //   const d = `M${centerX},${centerY} m-${newSemiMajorAxis},0 a${newSemiMajorAxis},${newSemiMinorAxis} 0 1,1 ${2 * newSemiMajorAxis},0 a${newSemiMajorAxis},${newSemiMinorAxis} 0 1,1 -${2 * newSemiMajorAxis},0`;
-    //   ellipsePath.setAttribute('d', d);
-    // }
     const semiMajorAxis = semiMajorAxisVal.current
     const semiMinorAxis = semiMinorAxisVal.current
+    const centerX = svgCanvas.width.animVal.value / 2;  // 椭圆中心X坐标
+    const centerY = svgCanvas.height.animVal.value + semiMinorAxis - ((695 - 355) / 695 * windowHeight) + 20;  // 椭圆中心Y坐标 semiMinorAxis-((695-355)/695*windowHeight)
     let i = 0
     ellipseIsShow.current = true;
-    imgDarken.current = false;
     setTimeout(() => {
       const interval = 1000 / 120;
+      imgDarken.current = false;
       const setIntervalFn = setInterval(() => {
         i++;
         let newSemiMajorAxis = semiMajorAxis
@@ -740,36 +739,37 @@ function App () {
     }
     animate();
   }
-  // const setIntervalFn = setInterval(() => {
-  //   updateDate()
-  // }, 100);
   const updateDate = () => {
     const newDate = new Date()
-    const day = newDate.getDate() < 10 ? `0${newDate.getDate()}` : newDate.getDate()
-    const month = (newDate.getMonth() + 1) < 10 ? `0${newDate.getMonth() + 1}` : (newDate.getMonth() + 1)
-    const year = newDate.getFullYear()
-    const hour = newDate.getHours() < 10 ? `0${newDate.getHours()}` : newDate.getHours()
-    const minute = newDate.getMinutes() < 10 ? `0${newDate.getMinutes()}` : newDate.getMinutes()
-    const seconds = newDate.getSeconds() < 10 ? `0${newDate.getSeconds()}` : newDate.getSeconds()
-    let milliseconds;
-    if (newDate.getMilliseconds().toString().length === 1) {
-      milliseconds = `00${newDate.getMilliseconds()}`
-    } else if (newDate.getMilliseconds().toString().length === 2) {
-      milliseconds = `0${newDate.getMilliseconds()}`
-    } else {
-      milliseconds = newDate.getMilliseconds();
-    }
-    // setTimeStamp(`${day} ${month} ${year} ${hour} ${minute} ${seconds} ${milliseconds}`)
+    const day = newDate.getDate();
+    const month = newDate.getMonth() + 1; // 月份从 0 开始，需加 1
+    const year = newDate.getFullYear();
+    const hours = newDate.getHours();
+    const minutes = newDate.getMinutes();
+    const seconds = newDate.getSeconds();
+    const milliseconds = newDate.getMilliseconds();
+
+    // 格式化为双位数字（如 01, 02 等）
+    const formattedDay = day.toString().padStart(2, '0');
+    const formattedMonth = month.toString().padStart(2, '0');
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    const formattedSeconds = seconds.toString().padStart(2, '0');
+    const formattedMilliseconds = milliseconds.toString().padStart(3, '0'); // 毫秒为三位数字
+    // const formattedMilliseconds = ''; // 毫秒为三位数字
+    // 拼接日期和时间字符串
+    // const formattedTime = `${formattedDay} ${formattedMonth} ${year} ${formattedHours} ${formattedMinutes} ${formattedSeconds} ${formattedMilliseconds}`;
+    const formattedTime = `${formattedDay} ${formattedMonth} ${year} ${formattedHours} ${formattedMinutes}`;
     setTimeStamp({
-      day,
-      month,
+      day: formattedDay,
+      month: formattedMonth,
       year,
-      hour,
-      minute,
-      seconds,
-      milliseconds
+      hour: formattedHours,
+      minute: formattedMinutes,
+      seconds: formattedSeconds,
+      milliseconds: formattedMilliseconds
     })
-    // timeStamp.current = `${day} ${month} ${year} ${hour} ${minute} ${seconds} ${milliseconds}`
+    timeStampRef.current.textContent = formattedTime
   }
   return (
     <>
@@ -790,15 +790,19 @@ function App () {
           <img src={leftBottomImg} alt="" />
         </div>
         <div className='timeStamp'>
-          <div className='timeStamp_day'>{timeStamp.day}</div>
+          {/* <div className='timeStamp_day'>{timeStamp.day}</div>
           <div className='timeStamp_month'>{timeStamp.month}</div>
           <div className='timeStamp_year'>{timeStamp.year}</div>
           <div className='timeStamp_hour'>{timeStamp.hour}</div>
           <div className='timeStamp_minute'>{timeStamp.minute}</div>
           <div className='timeStamp_seconds'>{timeStamp.seconds}</div>
+          <div className='timeStamp_milliseconds'>{timeStamp.milliseconds}</div> */}
+          <div className='timeLeft' ref={timeStampRef}></div>
+          &nbsp;
+          <div className='timeStamp_seconds'>{timeStamp.seconds}</div>
+          &nbsp;
           <div className='timeStamp_milliseconds'>{timeStamp.milliseconds}</div>
         </div>
-        {/* <div className='timeStamp'>123</div> */}
         <div className='boxTop' ref={boxTopRef}></div>
         <div className='boxBottom' ref={boxBottomRef}>
           <canvas className='boxBottomCanvas' ref={bottomCanvasRef} width="0" height="0"></canvas>
@@ -813,7 +817,7 @@ function App () {
               <text id="ellipseText" ref={bottomSvgEllipseTextRef} ></text>
             </g>
           </svg>
-          <div className={ellipseIsShow.current ? 'boxBottomText boxBottomText_hide' : 'boxBottomText'}>
+          <div className={ellipseIsShow.current ? 'boxBottomText boxBottomText_hide' : 'boxBottomText'} ref={boxBottomTextRef}>
             {contentText.map((item) => (
               <>
                 <div className='textItem' key={item.title}>
